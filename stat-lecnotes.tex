@@ -1,0 +1,110 @@
+\documentclass{book} 
+\usepackage[a4paper,left=21mm,right=21mm,top=30mm,bottom=25mm]{geometry}
+\usepackage{amsmath,amsthm}
+\usepackage{titlesec}
+\usepackage{enumerate} 
+\usepackage{graphicx} 
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{transparent} 
+\usepackage{tikz} 
+\usepackage{cancel} 
+\usepackage[ruled, linesnumbered,vlined]{algorithm2e}
+\usepackage{fancyhdr}
+\usepackage{xfrac}
+\usepackage{accents}
+\usepackage{stackrel}
+\usepackage{nicematrix}
+\usepackage{libertine}
+\usepackage[T1]{fontenc}
+\usepackage[libertine,vvarbb,uprightscript]{newtxmath}
+\usepackage{mathtools}
+\usepackage[hidelinks]{hyperref}
+\usepackage{setspace}
+\usepackage{mdframed}
+
+\title{math62.1 lec notes} 
+\author{emily} 
+\date{\today}
+
+\pagestyle{fancy}
+\fancyhead{}
+\fancyhead[LE]{\nouppercase\leftmark}% LE -> Left part on Even pages
+\fancyhead[RO]{\nouppercase\rightmark}% RO -> Right part on Odd pages
+
+\DeclareSymbolFont{largesymbolstx}{OMX}{txex}{m}{n}
+\DeclareMathSymbol{\txintop}{\mathop}{largesymbolstx}{"52}
+\DeclareRobustCommand\txint{\txintop\nolimits}
+\renewcommand{\int}{\txint}
+\DeclareSymbolFont{largesymbolstxA}{U}{txexa}{m}{n}
+\DeclareMathSymbol{\txiintop}{\mathop}{largesymbolstxA}{"21} % 33 (decimal) = "21 (hexadecimal)
+\DeclareRobustCommand\txiint{\txiintop\nolimits}
+\renewcommand{\iint}{\txiint}
+
+\fboxsep=4pt
+\RenewDocumentCommand{\footnoterule}{}{\vfill\kern-3pt \hrule width 0.4\columnwidth\kern2.6pt} %yoinked from LSE
+
+\RenewDocumentCommand{\labelitemi}{}{$\rightarrow$}
+\RenewDocumentCommand{\labelenumi}{}{\colorbox{magenta!40}{\textbf{\arabic{enumi}}}}
+\RenewDocumentCommand{\labelenumii}{}{\transparent{0.5}\colorbox{CornflowerBlue!40}{\transparent{1.0}\textbf{\alph{enumii}}}}
+
+\NewDocumentEnvironment{solution}{}{%
+    \RenewDocumentCommand{\qedsymbol}{}{$\blacksquare$}
+    \begin{proof}[Solution]
+}{\end{proof}}
+
+\NewDocumentEnvironment{example}{}{
+    \RenewDocumentCommand{\qedsymbol}{}{$\blacksquare$}
+    \begin{proof}[Example]
+}{\end{proof}}
+
+\newcounter{theo}[section]
+\newenvironment{theorem}[1][]{%
+  \stepcounter{theo}%
+  \ifstrempty{#1}%
+    {\mdfsetup{%
+      frametitle={%
+        \tikz[baseline=(current bounding box.east),outer sep=0pt]
+        \node[anchor=east,rectangle,fill=magenta!20]
+        {\strut{}\textsf{Theorem~\thetheo}};}}
+    }%
+    {\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=magenta!20]
+{\strut\textsf{Theorem~\thetheo:~#1}};}}%
+}%
+\mdfsetup{innertopmargin=10pt,linecolor=magenta!20,%
+linewidth=2pt,topline=true,
+frametitleaboveskip=\dimexpr-\ht\strutbox\relax,}
+\begin{mdframed}[]\relax%
+}{\end{mdframed}}
+
+% \DeclareMathAlphabet{\mathcal}{OMS}{cmsy}{m}{n}
+
+\NewDocumentCommand{\iid}{}{\stackrel{\mathrm{i.i.d.}}{\sim}}
+\NewDocumentCommand{\approach}{}{\overset{\mathrm{d}}{\longrightarrow}}
+\NewDocumentCommand{\der}{}{\mathrm{d}}
+\RenewDocumentCommand{\Pr}{}{\mathbf{Pr}}
+\NewDocumentCommand{\E}{}{\mathbf{E}}
+\NewDocumentCommand{\var}{}{\mathbf{var}}
+\NewDocumentCommand{\e}{}{\mathrm{e}}
+\NewDocumentCommand{\R}{}{\textcolor{Blue!80}{\textsf{R}}}
+
+\NewDocumentCommand{\exercises}{}{\vspace{10pt}\noindent\textbf{\large Exercises}
+\RenewDocumentCommand{\labelenumi}{}{\colorbox{pink!60}{\textbf{\arabic{enumi}}}}}
+\NewDocumentCommand{\defn}{}{\noindent\textbf{Defintion.}}
+
+\titleformat{\section}{\bfseries}{\Large\scshape\thechapter.\arabic{section}}{1em}{\Large\bfseries
+\RenewDocumentCommand{\labelenumi}{}{\colorbox{CornflowerBlue!40}{\textbf{\arabic{enumi}}}}}
+
+\titleformat{\chapter}[block]
+  {\normalfont\LARGE\bfseries}{\colorbox{Periwinkle!40}{\scshape\thechapter}}{1em}{\LARGE\scshape}
+\titlespacing*{\chapter}{0pt}{-19pt}{10pt}
+
+\NewDocumentCommand{\code}{m}{\textcolor{Blue!80}{\mathsf{#1}}}
+\onehalfspacing\setlength{\parskip}{5pt}
+
+\begin{document}
+\include{chap1-sampdist} 
+
+\end{document}

@@ -1,0 +1,125 @@
+\chapter{Sampling distributions}
+In this chapter, we briefly review some concepts from \textsc{math} 61.2 regarding the probability distributions of functions of random variables (now called statistics), using techniques like moment-generating functions and the cdf technique. 
+We prove the Lindeberg-L\'evy form of the celebrated central limit theorem, as well as derive certain special distributions of sample means, sample variances, and order statistics. 
+Finally, we introduce three new probability distributions, the \(\chi^2\) distribution, the student \(t\) distrubution, and the \(\mathscr{F}\) distribution. 
+\section{Distribution of the mean and the CLT}
+Given \(n\) random variables, \(X_1,X_2,\ldots, X_n\), a \textbf{statistic} is a function \(g(X_1, X_2,\ldots, X_n)\) of these random variables. 
+The probability distribution of a statistic is called its sampling distribution. 
+\begin{example}
+    Let \({(X_i)}_{i=1}^n\iid \mathrm{Be}(p)\). 
+    Define \(T_n\) to be their sum, \(T_n = \sum_{i=1}^n X_i\). 
+    Then, we know that \(T_n \sim \mathrm{Bin}(n,p)\). 
+\end{example}
+\begin{example}
+    Let \(X_1,X_2\iid \mathscr{U}(0,1)\). Find the distribution of \(X_1 + X_2\).
+
+    Note that the support for \(X_1 + X_2\) is the unit square in \(\mathbb{R}^2\). 
+    The function \(x_1 + x_2 = t\) corresponds to a line moving diagonally across the square from left to right. 
+    We use the cdf technique:\[
+    F_{X_1+ X_2} (t) = \Pr[X_1 + X_2 \leq t] = \iint_R 1 \cdot \der x_1 \der x_2,~R = \{(x_1,x_2) \in [0,1] : x_1 + x_2 \leq t\}.
+    \]Notice that we can split the integral into two cases: if (1) \(0< t<1\), then \(R\) is bounded by the two axes and \(x_1 + x_2 = t\); whereas if (2) \(1\leq t < 2\), then \(R\) is the unit square minus the upper right triangle bounded by \(x_2 = 1, x_1 = 1\), and \(x_1 + x_2 =t\). 
+    This gives us:\begin{itemize}
+        \item when \(0<t<1\): \[
+        F_{X_1 + X_2} (t) = \int_0^t \int_0^{t-x_2} 1 \cdot \der x_1 \der x_2 = \int_0^t (t - x_2) \der x_2 = \biggl(tx_2 - \frac{x_2^2}{2} \bigg)\bigg|_0^t = t^2 - \frac{t^2}{2}=  \frac{t^2}{2}.\]
+        \item when \(1\leq t < 2\): \begin{align*}
+        F_{X_1 + X_2} (t) &= 1 - \int_{t-1}^1 \int_{t-x_2}^1 1\cdot \der x_1 \der x_2  = 1 - \int_{t-1}^1 (1-t + x_2) \der x_2 \\ 
+        &= 1 - \bigg( x_2 (1-t) + \frac{x_2^2}{2} \bigg)\bigg|_{t-1}^1 = \frac{1}{2} + (t-1) - \frac{{(t-1)}^2}{2}.\end{align*}
+    \end{itemize}
+    This gives us the cdf of \(X_1 + X_2\). 
+    To find its pdf, we simply differentiate and obtain\[
+    p_{X_1 + X_2}(t) = \begin{cases}
+        t, &\text{when}~0<t<1 \\ 
+        2-t,&\text{when}~1\leq t <2
+    \end{cases} \]as our desired pdf. 
+\end{example}
+
+Consider \({(X_i)}_{i=1}^n \iid \mathscr{N}(\mu, \sigma^2)\). 
+Using moment-generating functions, we can determine the distribution of the so-called \textbf{sampling mean} \(\overline{X}_n = \frac{1}{n}\sum_{i=1}^n X_i\), a common statistic. 
+First recall that \(\mathscr{M}_{\alpha X}(t) = \mathscr{M}_X(\alpha t)\), and \(\mathscr{M}_{\sum X_i}(t) = \prod_i \mathscr{M}_{X_i}(t)\) for a random variable \(X\). Now:\begin{align*}
+    \mathscr{M}_{\overline{X}_n}(t) &= \mathscr{M}_{\frac{1}{n}\sum X_i}(t) = \mathscr{M}_{\sum X_i} \bigl(\tfrac{t}{n}\bigr) = \prod_{i=1}^n \mathscr{M}_{X_i} \big(\tfrac{t}{n}\big) \\
+    &= {\biggl\{ \exp\bigg[\mu \biggl(\frac{t}{n}\bigg) + \frac{1}{2}\sigma^2 {\biggl(\frac{t}{n}\bigg)}^2\bigg]\biggr\} }^n = \exp \bigg[\, \mu t + \frac{1}{2}\biggl(\frac{\sigma^2}{n}\bigg)t^2\bigg],&\text{substituting}~\frac{t}{n}~\text{into}~\mathscr{M}_{X_i}(t)
+\end{align*}which is the mgf of a normal random variable with mean \(\mu\) and variance \(\frac{\sigma^2}{n}\), so \(\overline{X}_n \sim \mathscr{N}(\mu, \frac{\sigma^2}{n})\). 
+In general, recall also from \textsc{math} 61.2 that if \({(X_i)}_{i=1}^n\) are independent normal random variables with means \(\mu_i\) and variances \(\sigma_i^2\), then the distribution of a linear combination of them would obey a normal distribution with a similarly linear combination of their means and variances. 
+Symbolically,\[
+    {(X_i)}_{i=1}^n \overset{\mathrm{ind}}{\sim} \mathscr{N} (\mu_i, \sigma_i^2) \implies \sum_{i=1}^n a_i X_i \sim \mathscr{N}\Big(\sum_{i=1}^n a_i \mu_i, \sum_{i=1}^n a_i^2 \sigma_i^2\Big). 
+\]
+
+\begin{example}
+    Compute the probability that the sample mean of size 10 taken from a normal population with mean 1 and variance 2 has a value between 1.2 and 3.1. 
+
+    We know that the sample mean \(\overline{X}_{10} \sim \mathscr{N}(1, \frac{2}{10})\). 
+    Thus,\[
+    \Pr [1.2 <\overline{X}_{10} <3.1] = \code{pnorm(3.1, mean=1, sd=sqrt(0.2))} - \code{pnorm(1.2, mean=1, sd=sqrt(0.2))} \approx 0.3273,\]
+    using \R~commands. 
+\end{example}
+
+In practice, though, it might be that we don't know the underlying distribution of a sample \({(X_i)}_{i=1}^n\). 
+This problem arises frequently when dealing with real data, which does not, in general, follow an explicitly given probability distribution. 
+However, we have the following result: 
+
+\begin{theorem}[Lindeberg-L\'evy CLT]
+    Suppose \({(X_i)}_{i=1}^n\) are i.i.d.\ random variables obeying an unknown probability distribution with mean \(\mu\) and variance \(\sigma^2\). 
+    Then, \[\overline{X}_n \overset{\mathrm{d}}{\longrightarrow} \mathscr{N}(\mu, \tfrac{\sigma^2}{n}),\]
+    where \(\overset{\mathrm{d}}{\longrightarrow}\) indicates the distribution approaching \(\mathscr{N}(\mu, \frac{\sigma^2}{n})\) as \(n\to\infty\).
+\end{theorem}
+
+\begin{proof}
+    To prove this, we will use mgf's. 
+    Let \(\mathscr{M}_{X}(t)\) be the mgf of one of these \(X_i\)'s. 
+    To show that \(\mathscr{M}_{\overline{X}_n}(t) \) approaches the mgf of a normal random variable with mean \(\mu\) and variance \(\frac{\sigma^2}{n}\) as \(n\to\infty\), it suffices to show that\begin{equation}\label{eq:1-1}
+        \lim_{n\to\infty} \mathscr{M}_Z(t) = \e^{t^2 / 2},~\text{where}~Z= \frac{\overline{X}_n - \mu}{\sigma / \sqrt{n}},~\text{the standardized form of}~\overline{X}_n. 
+    \end{equation}
+    First, we manipulate \(Z\) to make it resemble a linear combination of the \(X_i\)'s:\[
+    \frac{\overline{X}_n - \mu}{\sigma / \sqrt{n}} = \frac{\sqrt{n}}{\sigma} \bigg(\frac{1}{n}\sum_{i=1}^n (X_i - \mu)\bigg) = \frac{1}{\sigma\sqrt{n}} \sum_{i=1}^n (X_i - \mu). 
+    \]Substituting this into~\eqref{eq:1-1}~gives us\[
+    \mathscr{M}_Z(t) = \mathscr{M}_{\sum (X_i - \mu)}\big(\tfrac{t}{\sigma \sqrt{n}}\big) = \prod_{i=1}^n \mathscr{M}_{X_i - \mu}\big(\tfrac{t}{\sigma\sqrt{n}}\big) = {\Big[\mathscr{M}_{X_i - \mu}\big(\tfrac{t}{\sigma\sqrt{n}}\big)\Big]}^n.\]
+    Since we are working with exponents to the \(n\), it might be helpful to take the logarithm of this expression. 
+    Hence, notice that to prove~\eqref{eq:1-1}~, it further suffices to show\[
+    \lim_{n\to\infty} \ln \mathscr{M}_Z(t) = \frac{t^2}{2}. 
+    \]As a final simplification, we can make a substitution letting \(h\coloneq \frac{t}{\sigma\sqrt{n}}\), so that \(n = \frac{t^2}{\sigma^2 h^2}\) and \(h\to 0\) as \(n\to \infty\). 
+    Then:\begin{align*}
+    \lim_{n\to\infty} \ln \mathscr{M}_Z(t) &= \lim_{n\to\infty} \ln {\Big[\mathscr{M}_{X_i - \mu}\big(\tfrac{t}{\sigma\sqrt{n}}\big)\Big]}^n = \lim_{n\to\infty} n\cdot \ln \Big(\mathscr{M}_{X_i -\mu}\big(\tfrac{t}{\sigma\sqrt{n}}\big) \Big)\\
+    &= \lim_{h\to 0} \frac{t^2}{\sigma^2 h^2} \cdot \ln \big(\mathscr{M}_{X_i - \mu}(h)\big) =\frac{t^2}{\sigma^2} \lim_{h\to 0} \frac{\ln\big(\mathscr{M}_{X_i - \mu}(h)\big)}{h^2} &\text{form}~\frac{0}{0},~\text{since}~\mathscr{M}_{X}(0) = 1~\text{for all r.v.'s}~X \\ 
+    &=\frac{t^2}{\sigma^2}\lim_{h\to 0} \frac{\frac{1}{\mathscr{M}_{X_i -\mu}(h)} \cdot \mathscr{M}_{X_i - \mu}'(h)}{2h} = \frac{t^2}{\sigma^2} \lim_{h\to 0} \frac{\mathscr{M}_{X_i - \mu}'(h)}{2h\cdot \mathscr{M}_{X_i - \mu}(h)} &\text{form}~\frac{0}{0},~\text{since}~\mathscr{M}_{X_i -\mu}'(0) = \E[X_i - \mu] = 0 \\ 
+    &=\frac{t^2}{\sigma^2}\lim_{h\to 0} \frac{\overbrace{\mathscr{M}_{X_i -\mu}''(h)}^{\E[{(X_i - \mu)}^2]~=~\var [X_i]~=~\sigma^2}}{\underbrace{2\cdot\mathscr{M}_{X_i -\mu}(h)}_2 + \underbrace{2h\cdot\mathscr{M}_{X_i -\mu}'(h)}_{0}} = \frac{t^2}{\sigma^2} \cdot \frac{\sigma^2}{2} = \frac{t^2}{2},
+    \end{align*}as desired. 
+\end{proof}
+
+\begin{example}
+    Let \({(X_i)}_{i=1}^{64} \iid \mathscr{U}(0,1)\). 
+    Find \(k\in\mathbb{R}\) such that \(\Pr \Big[\sqrt[64]{\textstyle\prod_{i=1}^{64} X_i} \geq k\Big] = 0.10\).
+
+    Taking the logarithm of the expression inside the probability function gives us\[
+    \Pr \bigg[\frac{1}{64}\sum_{i=1}^{64} \ln X_i \geq \ln k\bigg] = 0.10,\]
+    which we can recognize as the sampling mean of random variables \({(\ln X_i)}_{i=1}^{64}\). 
+    Ideally, then, we can apply the CLT to approximate the value of \(k\) that will make this statement true, since this will give us an approximation of the distribution of \(\overline{\ln X}_{64}\), but first we need to find \(\E[\ln X_i]\) and \(\var[\ln X_i]\). 
+    We use the cdf technique. 
+    Note that since \(X_i\) takes on values between 0 and 1, \(\ln X_i\) will take on values less than 0. 
+    Hence\[
+    F_{\,\ln X_i}(t) = \Pr[\ln X_i \leq t] = \Pr [X_i \leq \e^t] = \int_0^{\e^t} 1\cdot \der x_i, t<0,
+    \]and so \(p_{\,\ln X_i}(t) = \e^t\), with \(t<0\). 
+    From here we can see that \(\E[\ln X_i] = -1\) and \(\var[\ln X_i] = 1\). 
+    Then, by the CLT, we have \(\frac{1}{64} \sum_{i=1}^{64} \ln X_i\approach \mathscr{N} (-1, \frac{1}{64})\). 
+    Finally, we compute\begin{align*}
+        \Pr \bigg[\frac{1}{64}\sum_{i=1}^{64} \ln X_i \geq \ln k\bigg]  &=0.10 \\ 
+        1 - \Pr \bigg[\frac{1}{64}\sum_{i=1}^{64} \ln X_i \leq \ln k\bigg] &= 0.10 \\ 
+        \ln k &= \code{qnorm(0.9, mean=-1, sd=1/8)}\\ 
+        k&\approx \e^{-0.84},
+    \end{align*}as desired. 
+\end{example}
+
+% \begin{minipage}[t]{.14\textwidth}
+%     \vspace{0pt}
+%     \includegraphics[width=2cm]{nerd_maddy.png} 
+% \end{minipage}%
+% \fbox{
+% \begin{minipage}[t]{.76\textwidth}
+%     \vspace{0pt}
+%     \textbf{Nerd Interjection!} I've been using \R~commands without explanation so here's a debrief:\begin{enumerate}
+%         \item \(\code{p\{dist\}(t,\{param\!1\}=a,\{param\!2\}=b,\ldots)}\): Computes \(\Pr[X\leq t]\) where \(X\sim \code{dist}(\code{a}, \code{b})\) for an arbitrary distribution \(\code{dist}\). 
+%         Common values for \(\code{dist}\) are \(\code{norm}, \code{gamma}, \code{binom}\), etc. 
+%         Parameters are usually self explanatory (e.g., \(\code{mean}\) and \(\code{sd}\) for \(\code{pnorm}\), \(\n\)). 
+%         \item \(\code{q\{dist\}(t,mean=\mu,sd=\sigma)}\): Computes for \(k\) in expression \(\Pr [X\leq k] = t\) where \(X \sim \code{dist}(\mu, \sigma^2)\), again for an arbitrary distribution. 
+%         \item \(\code{d\{dist\}(t,mean=\mu,sd=\sigma)}\): Computes 
+%     \end{enumerate}
+% \end{minipage}}
