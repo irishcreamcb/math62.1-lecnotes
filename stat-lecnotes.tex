@@ -65,13 +65,13 @@
       frametitle={%
         \tikz[baseline=(current bounding box.east),outer sep=0pt]
         \node[anchor=east,rectangle,fill=magenta!20]
-        {\strut{}\textsf{Theorem~\thetheo}};}}
+        {\strut{}\textsf{Theorem~\thesection.\thetheo}};}}
     }%
     {\mdfsetup{%
 frametitle={%
 \tikz[baseline=(current bounding box.east),outer sep=0pt]
 \node[anchor=east,rectangle,fill=magenta!20]
-{\strut\textsf{Theorem~\thetheo:~#1}};}}%
+{\strut\textsf{Theorem~\thesection.\thetheo:~#1}};}}%
 }%
 \mdfsetup{innertopmargin=10pt,linecolor=magenta!20,%
 linewidth=2pt,topline=true,
@@ -101,7 +101,7 @@ frametitleaboveskip=\dimexpr-\ht\strutbox\relax,}
   {\normalfont\LARGE\bfseries}{\colorbox{Periwinkle!40}{\scshape\thechapter}}{1em}{\LARGE\scshape}
 \titlespacing*{\chapter}{0pt}{-19pt}{10pt}
 
-\NewDocumentCommand{\code}{m}{\textcolor{Blue!80}{\mathsf{#1}}}
+\NewDocumentCommand{\code}{m}{\textcolor{Blue!80}{\mathtt{#1}}}
 \onehalfspacing\setlength{\parskip}{5pt}
 
 \begin{document}
