@@ -54,6 +54,20 @@ Other distributions that obey this law are the gamma distribution and the Poisso
     using \R~commands. 
 \end{example}
 
+\begin{minipage}{.14\textwidth}
+    \includegraphics[width=2cm]{nerd_maddy.png} 
+\end{minipage}%
+\fbox{
+\begin{minipage}[t]{.76\textwidth}
+    \textbf{Nerd Interjection!} Here's a brief anatomy of an \R~command:\[
+    \code{\{p|d|q\}\{distribution\}(value, params)}\]\begin{itemize}
+        \item \(\code{\{p|d|q\}}\): Using \(\code{p}\) will return the cdf of the distribution evaluated at \(\code{value}\), i.e., \(\Pr[X<\code{value}]\). Using \(\code{d}\) will return the result of evaluating the pdf instead (useful for discrete distributions). Finally, using \(\code{q}\) will evaluate the inverse cdf, i.e., the solution to the equation \(\Pr[X<x] = \code{value}\). 
+        \item \(\code{distribution}\): Pretty self-explanatory. Names are may be shortened if long (e.g., \(\code{norm}\) for normal and \(\code{binom}\) for binomial). 
+        \item \(\code{params}\): In general, the parameters you need to define the distribution will appear in the usual order that they do and you don't really need the whole \(\code{mean=}\) (e.g., \(\code{pnorm(0.5,0,1)}\) is standard normal and returns 0). 
+    \end{itemize}
+\end{minipage}}
+\vspace{10pt}
+
 In practice, though, it might be that we don't know the underlying distribution of a sample \({(X_i)}_{i=1}^n\). 
 This problem arises frequently when dealing with real data, which does not, in general, follow an explicitly given probability distribution. 
 However, we have the following result: 
@@ -86,15 +100,36 @@ However, we have the following result:
     \end{align*}as desired. 
 \end{proof}
 
-The central limit theorem (CLT) is often useful in deriving approximations of very large discrete properties, where finding exact values might be theoretically impossible due to combinatorial explosion. 
+The central limit theorem (CLT) is often useful in deriving approximations of very large discrete properties, where finding exact values might be practically impossible due to combinatorial explosion. 
 This can be seen in the following form of the CLT, which is a corollary of the Lindeberg-L\'evy CLT: 
+
 \begin{theorem}[De Moivre-Laplace Theorem]
     If \((X_i)_{i=1}^n \iid \mathrm{Be}(p)\) (i.e., independent coin flips with probability \(p\)), then\[\sum_{i=1}^n X_i \sim \mathrm{Bin}(n,p) \approach \mathscr{N}\big(np,np(1-p)\big).\]
 \end{theorem}
+
 Thus, given a random variable \(X\) obeying a binomial distribution with very large \(n\), we can approximate\[
 \Pr[X=k] = \Pr[k-\tfrac{1}{2} < X < k +\tfrac{1}{2}] \approx \Pr[k-\tfrac{1}{2} < W < k + \tfrac{1}{2}], 
 \]where \(W\) is a normally distributed random variable with the appropriate parameters.
 This approximation is valid whenever \(n> 9\cdot\frac{p}{1-p}\) and \(n> 9\cdot\frac{1-p}{p}\). 
+
+\begin{example}
+    Let \(X\sim \mathrm{Bin}(10, 0.5)\). Find \(\Pr[X=3]\) by approximating it first, then by finding the exact value. 
+
+    Since \(n = 10 > 9\), we can use the normal approximation. Thus,\begin{align*}
+        \Pr[X=3] &= \Pr[2.5 <X < 3.5] \approx \Pr[2.5<W<3.5] &\text{where}~W\sim\mathscr{N}(5,2.5) \\ 
+        &= \code{pnorm(3.5, 5, sqrt(2.5))}- \code{pnorm(2.5, 5, sqrt(2.5))} \approx 0.114467. 
+    \end{align*}By the usual pdf, we simply have:\[
+    \Pr[X=3] = \binom{10}{3} {\biggl(\frac{1}{2}\biggr)}^3{\biggl(\frac{1}{2}\biggr)}^7 = \code{dbinom(3,10,0.5)} \approx 0.1171875,
+    \]as desired. 
+\end{example}
+
+\vspace{10pt}
+Perhaps a more extreme example of a combinatorial approximation is given by the following theorem:
+\begin{theorem}[Stirling's approximation]
+    For large values of \(n\),\[
+    n! \sim \sqrt{2\uppi n}\cdot n^n \cdot\e^{-n}.\]
+    That is, the limit of their ratio approaches 1 as \(n\) approaches infinity. 
+\end{theorem}
 
 \begin{example}
     Let \({(X_i)}_{i=1}^{64} \iid \mathscr{U}(0,1)\). 
@@ -119,22 +154,6 @@ This approximation is valid whenever \(n> 9\cdot\frac{p}{1-p}\) and \(n> 9\cdot\
     \end{align*}as desired.
 \end{example} 
 
-% \begin{minipage}[t]{.14\textwidth}
-%     \vspace{0pt}
-%     \includegraphics[width=2cm]{nerd_maddy.png} 
-% \end{minipage}%
-% \fbox{
-% \begin{minipage}[t]{.76\textwidth}
-%     \vspace{0pt}
-%     \textbf{Nerd Interjection!} I've been using \R~commands without explanation so here's a debrief:\begin{enumerate}
-%         \item \(\code{p\{dist\}(t,\{param\!1\}=a,\{param\!2\}=b,\ldots)}\): Computes \(\Pr[X\leq t]\) where \(X\sim \code{dist}(\code{a}, \code{b})\) for an arbitrary distribution \(\code{dist}\). 
-%         Common values for \(\code{dist}\) are \(\code{norm}, \code{gamma}, \code{binom}\), etc. 
-%         Parameters are usually self explanatory (e.g., \(\code{mean}\) and \(\code{sd}\) for \(\code{pnorm}\), \(\n\)). 
-%         \item \(\code{q\{dist\}(t,mean=\mu,sd=\sigma)}\): Computes for \(k\) in expression \(\Pr [X\leq k] = t\) where \(X \sim \code{dist}(\mu, \sigma^2)\), again for an arbitrary distribution. 
-%         \item \(\code{d\{dist\}(t,mean=\mu,sd=\sigma)}\): Computes 
-%     \end{enumerate}
-% \end{minipage}}
-
 \section{Distribution of the sample variance} 
 After the mean, perhaps the next most common statistic in considertaion is the \textbf{sampling variance}, defined as\[
     S_n^2 \coloneq \frac{1}{n-1} \sum_{i=1}^n {(X_i - \overline{X}_n)}^2.
@@ -150,7 +169,7 @@ Thus, we have the following properties, for \(X\sim \upchi_k^2\):\begin{enumerat
 \end{enumerate}
 In practice, \(k\) is usually some positive integer, but it could theoretically take on any value. 
 
-\begin{theorem}
+\begin{theorem}\label{theo:1.2.1}
     If \(Z\sim \mathscr{N}(0,1)\), then \(Z^2 \sim \upchi_1^2\). 
     Similarly, if \((Z_i)_{i=1}^n \iid \mathscr{N}(0,1)\), then \(\sum Z_i^2 \sim \upchi_n^2\). 
 \end{theorem}
@@ -158,10 +177,23 @@ In practice, \(k\) is usually some positive integer, but it could theoretically 
 \begin{proof}
     We will use mgf's. Recall that \(\int_{-\infty}^\infty f(x) \der x = \sqrt{2\uppi\sigma^2}\) when \(f\) is of the form \(\exp \big(-\frac{{(x-\mu)}^2}{2\sigma^2}\big)\), i.e., a gaussian kernel.\begin{align*}
         \mathscr{M}_{Z^2}(t) &= \E\big[\e^{tZ^2}\big] = \int_{-\infty} ^\infty \e^{tz^2} \cdot \frac{1}{\sqrt{2\uppi}}\e^{-\sfrac{z^2}{2}} \der z = \frac{1}{\sqrt{2\uppi}} \int_{-\infty}^\infty \exp\biggl(-\frac{z^2}{2} + tz^2\biggr) \der z \\ 
-        &= \frac{1}{\sqrt{2\uppi}} \int_{-\infty}^\infty \exp\bigg[-\frac{1}{2}(1 - 2t)z^2\bigg] \der z = \frac{1}{\sqrt{2\uppi}} \int_{-\infty}^\infty \underbrace{\exp\bigg[-\frac{1}{2} \bigg(\frac{{(z-0)}^2}{{(1-2t)}^{-1}}\bigg)\bigg]}_{\text{gaussian kernel of}~\mathscr{N}(0, \frac{1}{1-2t})} \\ 
+        &= \frac{1}{\sqrt{2\uppi}} \int_{-\infty}^\infty \exp\bigg[-\frac{1}{2}(1 - 2t)z^2\bigg] \der z = \frac{1}{\sqrt{2\uppi}} \int_{-\infty}^\infty \underbrace{\exp\bigg[-\frac{1}{2} \bigg(\frac{{(z-0)}^2}{{(1-2t)}^{-1}}\bigg)\bigg]\der z}_{\text{gaussian kernel of}~\mathscr{N}(0, \frac{1}{1-2t})} \\ 
         &= \frac{1}{\sqrt{2\uppi}} \cdot \sqrt{\frac{2\uppi}{1-2t}} = {(1-2t)}^{-\sfrac{1}{2}} = \mathscr{M}_{\upchi_1^2}(t), t<\frac{1}{2}.
     \end{align*}The proof of the second statement follows by simply multiplying \(n\) of these mgf's together. 
 \end{proof}
+
+\begin{minipage}{.14\textwidth}
+    \includegraphics[width=2cm]{nerd_maddy.png} 
+\end{minipage}%
+\fbox{
+\begin{minipage}[t]{.76\textwidth}
+    \textbf{Nerd Interjection!} What the hell is a ``Gaussian kernel''?! Well, we know that\[
+    \int_{-\infty}^\infty \frac{1}{\sqrt{2\uppi \sigma^2}} \e^{-\frac{1}{2}{\big(\frac{x-\mu}{\sigma}\big)}^2} \der x = 1
+    \]since it's a valid pdf, so multiplying both sides by \(\sqrt{2\uppi \sigma^2}\) gives us\[
+        \int_{-\infty}^\infty\e^{-\frac{1}{2}{\big(\frac{x-\mu}{\sigma}\big)}^2} \der x = \sqrt{2\uppi \sigma^2},
+    \]and this holds for any value of \(\mu\) and \(\sigma^2\). 
+    Keep this sort of thing in mind, as it shows up a lot and we'll be using this technique with the gamma distribution as well later. 
+\end{minipage}}
 
 A corollary of this is that \(\upchi_n^2 \approach \mathscr{N}(n,2n)\) by an application of the CLT. 
 We can now prove our main result: 
@@ -171,3 +203,41 @@ We can now prove our main result:
     \frac{(n-1)S_n^2}{\sigma^2} \sim \upchi_{n-1}^2.
     \]
 \end{theorem}
+
+\begin{proof}
+    We begin by expanding the definition of \(S_n^2\) to turn it into a more workable form.\begin{align*}
+        \sum_{i=1}^n {(X_i - \overline{X}_n)}^2 &= \sum_{i=1}^n {(X_i - \mu + \mu - \overline{X}_n)}^2 = \sum_{i=1}^n {[(X_i - \mu) - (\overline{X}_n -\mu)]}^2 \\ 
+        &= \sum_{i=1}^n \big[{(X_i -\mu)}^2  - 2(X_i - \mu)(\overline{X}_n -\mu) + {(\overline{X}_n - \mu)}^2\big] \\ 
+        &= \sum_{i=1}^n {(X_i -\mu)}^2 - 2 \sum_{i=1}^n (X_i - \mu)(\overline{X}_n -\mu) + \sum_{i=1}^n {(\overline{X}_n - \mu)}^2 \\ 
+        &= \sum_{i=1}^n {(X_i -\mu)}^2 - 2(\overline{X}_n - \mu )\bigg(\sum_{i=1}^{n} X_i - n\mu\bigg) + n{(\overline{X}_n -\mu)}^2 \\ 
+        &= \sum_{i=1}^n {(X_i -\mu)}^2 - 2n(\overline{X}_n - \mu )(\overline{X}_n - \mu ) + n{(\overline{X}_n -\mu)}^2 =  \sum_{i=1}^n {(X_i -\mu)}^2 - n{(\overline{X}_n -\mu)}^2.
+    \end{align*}Put more neatly, this gives us\begin{equation}\label{eq:2-1}
+         \sum_{i=1}^n  {(X_i - \overline{X}_n)}^2 = \sum_{i=1}^n {(X_i - \mu)}^2 - n{(\overline{X}_n - \mu)}^2.
+    \end{equation} 
+    But \(\frac{X_i - \mu}{\sigma} \sim \mathscr{N}(0,1)\), so we can apply thm.~\ref{theo:1.2.1}~of this section to obtain \(
+    \sum_{i=1}^n {\big(\frac{X_i - \mu}{\sigma}\big)}^2 \sim \upchi_n^2
+    \). Finally, dividing both sides of equation~\ref{eq:2-1}~by \(\sigma^2\),\begin{align*}
+        \frac{1}{\sigma^2}\sum_{i=1}^{n} {(X_i - \overline{X}_n)}^2&=  \sum_{i=1}^n {\bigg(\frac{X_i -\mu}{\sigma}\bigg)}^2 - n{\bigg(\frac{\overline{X}_n -\mu}{\sigma}\bigg)}^2 \\ 
+        \frac{n-1}{\sigma^2} \underbrace{\frac{1}{n-1}\sum_{i=1}^{n} {(X_i - \overline{X}_n)}^2}_{S_n^2}&=  \sum_{i=1}^n {\bigg(\frac{X_i -\mu}{\sigma}\bigg)}^2- {\bigg(\frac{\overline{X}_n -\mu}{\sigma/\sqrt{n}}\bigg)}^2 \\ 
+        \frac{n-1}{\sigma^2} S_n^2 &= \underbrace{\sum_{i=1}^n {\bigg(\frac{X_i -\mu}{\sigma}\bigg)}^2}_{\sim\,\upchi_n^2}  -  \underbrace{{\bigg(\frac{\overline{X}_n -\mu}{\sigma/\sqrt{n}}\bigg)}^2}_{\sim\,\upchi_1^2} &\text{since}~\frac{\overline{X}_n - \mu}{\sigma/\sqrt{n}}\sim \mathscr{N}(0,1) \\ 
+        \mathscr{M}_{\frac{n-1}{\sigma^2}S_n^2}(t) & = \frac{\mathscr{M}_{\upchi_n^2}(t)}{\mathscr{M}_{\upchi_1^2}(t)} = \frac{{(1-2t)}^{-\sfrac{n}{2}}}{{(1-2t)}^{-\sfrac{1}{2}}} = {(1-2t)}^{-\frac{n-1}{2}}, &\text{taking mgf's}
+    \end{align*}which is the mgf of \(\upchi_{n-1}^2\), so \(\frac{n-1}{\sigma^2}S_n^2 \sim \upchi_{n-1}^2\). 
+\end{proof}
+
+Note that for the above trick with the mgf's to work as intended, we need \(\overline{X}_n\) and \(S_n^2\) to be independent. 
+They \textit{are} independent, but this will be proven in \textsc{math} 62.2. 
+
+\begin{example}
+    Let \({(X_i)}_{i=1}^{10} \iid \mathscr{N}(\mu, 4)\). Find the value of \(\Pr[3.6 < S^2 <4.2]\). 
+
+    We first scale the values to fit our theorem. We then have\[
+    \Pr\bigg[\frac{9}{4} \cdot 3.6 < \frac{10-1}{4} S^2 < \frac{9}{4}\cdot 4.2\bigg] = \Pr[8.1 < \upchi_9^2 < 9.45] = \code{chisq(9.45,9)} - \code{chisq(8.1,9)} \approx 0.1272876,
+    \]as desired. Suppose we wanted to find \(a,b\in\mathbb{R}\) such that \(\Pr[a<S^2<b] = 0.95\). 
+    Then, similarly, we scale the values to obtain \(\Pr[\frac{9}{4} a < \upchi_9^2 <\frac{9}{4} b]\). 
+    We can state this equivalently as \(\Pr[\upchi_9^2 < \frac{9}{4}a] = 0.025\) and \(\Pr[\upchi_9^2 < \frac{9}{4} ] = 0.975\), which gives us\begin{align*}
+        \frac{9}{4}\cdot a &= \code{chisq(0.025, 9)} & \frac{9}{4}\cdot b &= \code{chisq(0.975,9)} \\ 
+        a & = 1.200 & b&= 8.4545,
+    \end{align*}as desired. 
+\end{example}
+
+\section{The student \(t\) and the \(\mathscr{F}\) distributions}

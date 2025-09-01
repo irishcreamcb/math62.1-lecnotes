@@ -44,7 +44,7 @@
 \RenewDocumentCommand{\footnoterule}{}{\vfill\kern-3pt \hrule width 0.4\columnwidth\kern2.6pt} %yoinked from LSE
 
 \RenewDocumentCommand{\labelitemi}{}{$\rightarrow$}
-\RenewDocumentCommand{\labelenumi}{}{\colorbox{magenta!40}{\textbf{\arabic{enumi}}}}
+\RenewDocumentCommand{\labelenumi}{}{\colorbox{CornflowerBlue!40}{\textbf{\arabic{enumi}}}}
 \RenewDocumentCommand{\labelenumii}{}{\transparent{0.5}\colorbox{CornflowerBlue!40}{\transparent{1.0}\textbf{\alph{enumii}}}}
 
 \NewDocumentEnvironment{solution}{}{%
@@ -59,7 +59,7 @@
 
 \newcounter{theo}[section]
 \newenvironment{theorem}[1][]{%
-  \stepcounter{theo}%
+  \refstepcounter{theo}%
   \ifstrempty{#1}%
     {\mdfsetup{%
       frametitle={%
@@ -88,7 +88,7 @@ frametitleaboveskip=\dimexpr-\ht\strutbox\relax,}
 \NewDocumentCommand{\E}{}{\mathbf{E}}
 \NewDocumentCommand{\var}{}{\mathbf{var}}
 \NewDocumentCommand{\e}{}{\mathrm{e}}
-\NewDocumentCommand{\R}{}{\textcolor{Blue!80}{\textsf{R}}}
+\NewDocumentCommand{\R}{}{\textcolor{Blue!80}{\texttt{R}}}
 
 \NewDocumentCommand{\exercises}{}{\vspace{10pt}\noindent\textbf{\large Exercises}
 \RenewDocumentCommand{\labelenumi}{}{\colorbox{pink!60}{\textbf{\arabic{enumi}}}}}
