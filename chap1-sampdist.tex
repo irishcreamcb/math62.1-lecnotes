@@ -160,7 +160,7 @@ After the mean, perhaps the next most common statistic in considertaion is the \
 \]Before we derive its distribution, however, it is necessary to introduce another distribution---a variant of one that we have already seen before---and prove some basic results about it. 
 
 A random variable \(X\) obeys a \(\upchi^2\) distribution with \(k\) degrees of freedom  if it has the following pdf:\[
-    f(x) = \frac{1}{\Gamma (\frac{k}{2}) \cdot 2^{\sfrac{k}{2}}} \cdot x^{\sfrac{k}{2} -1} \e^{-\sfrac{x}{2}},~\text{where}~x,k\in (0,\infty).  
+    f(x) = \frac{1}{\Gamma (\frac{k}{2}) \cdot 2^{\sfrac{k}{2}}} \cdot x^{\frac{k}{2} -1} \e^{-\frac{x}{2}},~\text{where}~x,k\in (0,\infty).  
 \]Note that \(\upchi_k^2\) is equivalent to \(\mathrm{Gamma}(\frac{k}{2},2)\). 
 Thus, we have the following properties, for \(X\sim \upchi_k^2\):\begin{enumerate}
     \item \(\E[X] = \frac{k}{2} \cdot 2 = k\). 
@@ -194,6 +194,7 @@ In practice, \(k\) is usually some positive integer, but it could theoretically 
     \]and this holds for any value of \(\mu\) and \(\sigma^2\). 
     Keep this sort of thing in mind, as it shows up a lot and we'll be using this technique with the gamma distribution as well later. 
 \end{minipage}}
+\vspace{10pt}
 
 A corollary of this is that \(\upchi_n^2 \approach \mathscr{N}(n,2n)\) by an application of the CLT. 
 We can now prove our main result: 
@@ -234,10 +235,63 @@ They \textit{are} independent, but this will be proven in \textsc{math} 62.2.
     \Pr\bigg[\frac{9}{4} \cdot 3.6 < \frac{10-1}{4} S^2 < \frac{9}{4}\cdot 4.2\bigg] = \Pr[8.1 < \upchi_9^2 < 9.45] = \code{chisq(9.45,9)} - \code{chisq(8.1,9)} \approx 0.1272876,
     \]as desired. Suppose we wanted to find \(a,b\in\mathbb{R}\) such that \(\Pr[a<S^2<b] = 0.95\). 
     Then, similarly, we scale the values to obtain \(\Pr[\frac{9}{4} a < \upchi_9^2 <\frac{9}{4} b]\). 
-    We can state this equivalently as \(\Pr[\upchi_9^2 < \frac{9}{4}a] = 0.025\) and \(\Pr[\upchi_9^2 < \frac{9}{4} ] = 0.975\), which gives us\begin{align*}
+    We can state this equivalently as \(\Pr[\upchi_9^2 < \frac{9}{4}a] = 0.025\) and \(\Pr[\upchi_9^2 < \frac{9}{4}b ] = 0.975\), which gives us\begin{align*}
         \frac{9}{4}\cdot a &= \code{chisq(0.025, 9)} & \frac{9}{4}\cdot b &= \code{chisq(0.975,9)} \\ 
         a & = 1.200 & b&= 8.4545,
     \end{align*}as desired. 
 \end{example}
 
 \section{The student \(t\) and the \(\mathscr{F}\) distributions}
+
+Now that we know how to find the mean and variance of a random sample, we can look into perhaps \textit{standardizing} it. 
+Recall that the standardized form of a normal random variable \(X\sim\mathscr{N}(\mu, \sigma^2)\) is given by \(\frac{X-\mu}{\sigma}\). 
+Equivalently, we can `standardize' the mean of a normal random sample with the following expression:\[
+    \frac{\overline{X}_n -\mu}{S_n/\sqrt{n}}. 
+\]Note that the \(\sqrt{n}\) comes from the fact that \(\overline{X}_n\sim \mathscr{N}(\mu, \frac{\sigma^2}{n})\).
+We will see that the following holds:
+
+\begin{theorem}
+    Let \({(X_i)}_{i=1}^n \iid \mathscr{N}(\mu, \sigma^2)\). Then,\[
+        \frac{\overline{X}_n -\mu}{S_n/\sqrt{n}}\sim t_{n-1},
+    \]denoting a student \(t\) distribution with \(n-1\) degrees of freedom. 
+\end{theorem}
+
+Before we prove this theorem, let's make sense of this mysterious \(t\). 
+Suppose we have two independent random variables, \(Z\sim \mathscr{N}(0,1)\) and \(W\sim \upchi_k^2\). 
+We want the pdf of\[
+T \coloneq \frac{Z}{\sqrt{W/k}}. 
+\]We can solve for this using the Jacobian method. 
+
+Let \(t\coloneq \frac{z}{\sqrt{t/k}}\) and \(v\coloneq w\). 
+We first need to find the joint pdf of \(Z\) and \(W\). 
+Since they're independent, this is simply\[
+    f(z,w) = \frac{1}{\sqrt{2\uppi}} \e^{-\frac{z^2}{2}} \cdot \frac{1}{\upGamma(\frac{k}{2}) 2^{\sfrac{k}{2}}} w^{\frac{k}{2} - 1} \e^{-\frac{w}{2}}, 
+\]with \((z,w)\) taking on values in \(\mathbb{R}\times\mathbb{R}^+\). 
+Now we need to solve for \(z\) and \(w\) in terms of \(t\) and \(v\). 
+Obviously, \(w = v\), and we also have\[
+    t = \frac{z}{\sqrt{w/k}} \implies z = t\cdot \sqrt{\frac{w}{k}} = t\cdot \sqrt{\frac{v}{k}}. 
+\]To get the range of possible values of \(t\) and \(v\), we note that \(z\) can be any real number, and \(v\) must always be positive, so \(t\) must likewise be any real number. 
+The support then remains unchanged. 
+Finally, we find the Jacobian:\[
+    \mathscr{J} = \det\begin{pmatrix}
+        \begin{bmatrix}
+            \frac{\partial z}{\partial t} & \frac{\partial w}{\partial v} \\ 
+            \frac{\partial z}{\partial v} & \frac{\partial w}{\partial v}
+        \end{bmatrix}
+    \end{pmatrix} = \frac{\partial z}{\partial t}\frac{\partial w}{\partial v} - \frac{\partial w}{\partial v}\frac{\partial z}{\partial v} = \sqrt{\frac{v}{k}} \cdot 1 - \frac{t}{\sqrt{k}}\cdot \frac{1}{2} v^{-\frac{1}{2}} \cdot 0 = \sqrt{\frac{v}{k}},
+\]which is always positive. 
+This gives us our joint pdf of \(T\) and \(V\):\begin{align*}
+    g(t,v) &= f\big(t\sqrt{\tfrac{v}{k}}, v\big) \cdot |\mathscr{J} | = \frac{1}{\sqrt{\uppi}\cdot \upGamma(\frac{k}{2})\cdot 2^{\frac{k+1}{2}}} \cdot v^{\frac{k}{2} - 1} \e^{-\frac{v}{2}} \e^{-\frac{t^2v}{2k}} \cdot \sqrt{\frac{v}{k}} \\ 
+    &= \frac{1}{\sqrt{k\uppi}\cdot \upGamma(\frac{k}{2})\cdot 2^\frac{k+1}{2}} \cdot v^{\frac{k}{2} + \frac{1}{2} - 1} \e^{-\frac{1}{2}\big(1 + \frac{t^2}{k}\big)v}.
+\end{align*}You might notice we've arranged the variables on the right side a little bit suggestively, and the reward comes when we integrate out \(v\) to get the pdf of \(t\) alone.\begin{align*}
+    g(t) &= \int_{-\infty}^\infty g(t,v) \der v = \frac{1}{\sqrt{k\uppi}\cdot \upGamma(\frac{k}{2})\cdot 2^\frac{k+1}{2}} \underbrace{\int_{-\infty}^\infty v^{\frac{k}{2} + \frac{1}{2} - 1} \e^{-\frac{1}{2}\big(1 + \frac{t^2}{k}\big)v} \der v}_{\text{kernel of}~\mathrm{Gamma}\big(\frac{k+1}{2}, \frac{2}{1+\sfrac{t^2}{k}}\big)} \\ 
+    &= \frac{1}{\sqrt{k\uppi}\cdot \upGamma(\frac{k}{2})\cdot 2^\frac{k+1}{2}} \cdot \upGamma (\tfrac{k+1}{2}) {\biggl(\frac{2}{1+\frac{t^2}{k}}\biggr)}^{\frac{k+1}{2}} = \frac{1}{\sqrt{k\uppi}} \cdot \frac{\upGamma(\frac{k+1}{2})}{\upGamma(\frac{k}{2})}\cdot {\biggl(\frac{1}{1+\frac{t^2}{k}}\biggr)}^{\frac{k+1}{2}},
+\end{align*}with \(\mathrm{supp}(T) = \mathbb{R}\). 
+
+We can now introduce the \textbf{student \(t\)} distribution. A random variable \(X\) obeys a \(t\) distribution with \(k\) degrees of freedom if it has the following pdf:\[
+    f(x) = \frac{1}{\sqrt{k\uppi}} \cdot \frac{\upGamma(\frac{k+1}{2})}{\upGamma(\frac{k}{2})}\cdot {\biggl(\frac{1}{1+\frac{x^2}{k}}\biggr)}^{\frac{k+1}{2}}, ~x\in\mathbb{R}.
+\]We write \(X\sim t_k\). 
+The \(t\) distribution is symmetric about 0, but with fatter tails than the standard normal distribution, and it has the following properties:\begin{enumerate}
+    \item \(\E[X] = \E[Z] \cdot \E[\sqrt{\frac{k}{W}}] = 0\), where \(Z\sim \mathscr{N}(0,1)\) and \(W \sim \upchi_k^2\). 
+    \item \(\var[X] = \E[X^2] = \E[T^2] \cdot \E[\frac{k}{W}] = \displaystyle\frac{k}{\upGamma(\frac{k}{2})\cdot 2^\frac{k}{2}}\underbrace{\int_0^\infty  w^{\frac{k}{2} - 1 -1} \e^{-\frac{w}{2}}\cdot \der w}_{\text{kernel of}~\mathrm{Gamma}(\frac{k}{2} -1, \,2)} = \frac{k}{\underbrace{\upGamma(\tfrac{k}{2})}_{=~(\frac{k}{2} - 1)\upGamma(\frac{k}{2} -1)}\cdot 2^{\frac{k}{2}}} \cdot \upGamma(\tfrac{k}{2} -1) \cdot 2^{\frac{k}{2} -1} = \frac{k}{k-2}\). 
+\end{enumerate}
