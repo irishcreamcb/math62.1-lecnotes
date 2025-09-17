@@ -2,6 +2,7 @@
 In this chapter, we briefly review some concepts from \textsc{math} 61.2 regarding the probability distributions of functions of random variables (now called statistics), using techniques like moment-generating functions and the cdf technique. 
 We prove the Lindeberg-L\'evy form of the celebrated central limit theorem, as well as derive certain special distributions of sample means, sample variances, and order statistics. 
 Finally, we introduce three new probability distributions, the \(\upchi^2\) distribution, the student \(t\) distrubution, and the \(\mathscr{F}\) distribution. 
+Note: some examples are taken from last year's 62.1, so don't be alarmed by an example you don't recognize. 
 \section{Distribution of the mean and the CLT}
 Given \(n\) random variables, \(X_1,X_2,\ldots, X_n\), a \textbf{statistic} is a function \(g(X_1, X_2,\ldots, X_n)\) of these random variables. 
 The probability distribution of a statistic is called its sampling distribution. 
@@ -153,6 +154,21 @@ Perhaps a more extreme example of a combinatorial approximation is given by the 
         k&\approx \e^{-0.84},
     \end{align*}as desired.
 \end{example} 
+
+\begin{example}
+    Let \(X\) be the lifetime, in years, of an LED TV. 
+    Suppose that \(X\sim \mathrm{Exp}(5)\). 
+    Find the approximate value of \(\Pr[\overline{X}_{64} \geq 5.4]\), and then find the exact value of this probability. 
+
+    Since \({(X_i)}_{i=1}^{64}\iid \mathrm{Exp}(64)\), the sample mean \(\overline{X}_{64}\approach \mathscr{N}(5, \frac{25}{64})\) by the CLT. 
+    Then,\begin{align*}
+    \Pr[\overline{X}_{64} \geq 5.4] &= \Pr\bigg[\frac{\overline{X}_{64} - 5}{5/8} \geq \frac{5.4-5}{5/8}\bigg] \approx \Pr[Z \geq 0.64]&\text{where}~Z\sim \mathscr{N}(0,1)\\
+    &= 1 - \code{pnorm(0.64)} \approx 0.2610863,\end{align*}for our approximation. 
+    To get the exact value, recall that the sum of \(n\) exponential random variables with parameter 5 is itself a random variable \(W\sim \mathrm{Gamma}(n,5)\). Thus,\begin{align*}
+        \Pr[\overline{X}_{64} \geq 5.4] &= \Pr\bigg[\frac{1}{64} \sum_{i=1}^{64} X_i \geq 5.4\bigg] = \Pr\bigg[\sum_{i=1}^{64} X_i \geq 345.6\bigg] \\
+        &= 1- \code{pgamma(345.6, 64, 5)} \approx 0.2529934
+    \end{align*}is our exact value. 
+\end{example}
 
 \section{Distribution of the sample variance} 
 After the mean, perhaps the next most common statistic in considertaion is the \textbf{sampling variance}, defined as\[

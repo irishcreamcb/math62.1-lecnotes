@@ -1,0 +1,29 @@
+\chapter{Estimators}
+In this chapter, we look at problems of estimating parameters of certain unknown probability distributions, problems which arise naturally given samples from experimental data. 
+We begin with two methods, maximum likelihood estimation (MLE) and the method of moments (MOM). 
+We then look at a few properties of parameters; specifically, we formalize what it means for an estimator to be unbiased, efficient, and consistent, and we study (but not prove!) a theorem known as the Cramer-Rao lower bound. 
+Finally, we look at problems of interval estimation. 
+
+\section{MLE and MOM}
+Probability theory is responsible for giving a simplified model of a random process. 
+However, in most cases, the `best' (i.e., most accurate and precise) model for capturing this process is unknown. 
+It is our role as researchers to identify this model, hence the need for statistics. 
+
+To formalize this problem, consider the following situation. 
+Suppose we have a random sample \({(X_i)}_{i=1}^n \iid f(x; \theta)\). 
+It may be that \(f\) is unknown, or that \(\theta\) is unknown (or both!), but we restrict ourselves only to the case where \(f\) comes from a known family of distributions, and wee need to approximate \(\theta\). 
+Here's a simple example: 
+\begin{example}
+    Say we want to measure an object, with the true measurement being some (unknown) \(\theta\). 
+    What we can do is make \(n\) independent measurements of the object, giving us a sample \({(X_i)}_{i=1}^n\). 
+    To get the `best' estimate for \(\theta\), we want an estimate so that the difference between the true value and all our measurements is minimized, so we can define the least squares metric: \(L(\theta) \coloneq \sum_i {(X_i - \theta)}^2\). 
+    Since we want the value of \(\theta\) that minimizes this function, let's take its partial derivative with respect to \(\theta\) and set it to be 0, then solve for \(\theta\):\[
+    \frac{\partial L}{\partial \theta} = 2\sum_{i=1}^n (X_i - \theta) \cdot (-1) = -2\sum_{i=1}^n (X_i - \theta). 
+    \]This gives us \(\theta = \sum_i X_i / n = \overline{X}_n\).
+\end{example}
+
+We now define a \textbf{point estimator} of a parameter \(\theta\) to be a statistic \(T(X_1, \ldots , X_n)\).
+We denote point estimators as \(\hat{\Theta}\). 
+If a realized sample is given, i.e., \(X_i = x_i\) for all \(i\), then \(T(x_1, \ldots , x_n) \) is a real number called a \textbf{point estimate} of \(\theta\). 
+We denote it as \(\hat{\theta}\). 
+We consider two main methods of estimation. 
